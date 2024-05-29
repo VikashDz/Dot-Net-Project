@@ -1,0 +1,30 @@
+steps:
+  # Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/gcp-praticals/vikash-dot-net/web:latest', '.']
+
+  # Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/gcp-praticals/vikash-dot-net/web:latest']
+
+  # # Trigger Cloud Deploy with a Unique Release Name
+  # - name: 'gcr.io/cloud-builders/gcloud'
+  #   args:
+  #     - 'deploy'
+  #     - 'releases'
+  #     - 'create'
+  #     - 'release-$_COMMIT_SHA'  
+  #     - '--delivery-pipeline=prod'
+  #     - '--region=us-central1'
+  #     - '--skaffold-file=skafflod.yaml'
+  #     - '--images=web=us-central1-docker.pkg.dev/gcp-praticals/react-app-prod/web:latest'
+  #     - '--annotations=commitSha=$COMMIT_SHA'
+  #     - '--annotations=buildId=$BUILD_ID'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _COMMIT_SHA: $COMMIT_SHA
+  _BUILD_ID: $BUILD_ID
+
+
