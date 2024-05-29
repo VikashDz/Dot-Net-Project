@@ -1,20 +1,23 @@
 # Use the official .NET SDK image
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
-WORKDIR /source
+WORKDIR /app
 
 # Copy the project file into the container
-COPY ./WebApplication-cloud/*.csproj ./
+COPY *.csproj ./
 RUN dotnet restore
 
 # Copy the rest of the files into the container
-COPY ./WebApplication-cloud .
+COPY . ./
 
 # Build the application
-RUN dotnet publish -c Release -o /app --no-restore
+RUN dotnet publish -c Release -o out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
+
+EXPOSE 80
+
 ENTRYPOINT ["dotnet", "WebApplication-cloud.dll"]
